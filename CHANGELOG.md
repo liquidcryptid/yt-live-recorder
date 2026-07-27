@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.2.5 — 2026-07-27
+
+### Bug fixes
+- **Daily log files** now roll at UTC midnight while the app stays open (previously the day stamp was fixed at process start, so multi-day runs stayed on e.g. `…-2026-07-25.log`)
+- **Stopping one channel no longer kills every other download** — global `pkill`/`taskkill /IM` of yt-dlp/ffmpeg is skipped while siblings are still recording (this was aborting MLCPodcast mid-stream when another channel auto-ended)
+- **Stuck “recording” after a failed restart** — dead process slots and the 60s finalize lock no longer block re-recording the same channel
+- Routine HLS CDN noise (`keepalive request failed`, `Cannot reuse HTTP connection`, …) is debug-level again so real problems are visible
+- **No video formats found** applies a 10-minute cooldown (stops hammering channels like false-positive lives every 30s)
+
 ## 1.2.4 — 2026-07-25
 
 ### Packaging
