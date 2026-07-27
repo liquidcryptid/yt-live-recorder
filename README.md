@@ -5,7 +5,9 @@ Desktop app that **watches YouTube channels** and **records livestreams** automa
 > Not affiliated with, endorsed by, or sponsored by YouTube or Google.  
 > You are responsible for complying with applicable laws and YouTube’s terms.
 
-**Current version: 1.2.4**
+<!-- Public / end-user doc. Maintainer notes: docs/DEV.md (Forgejo). Version is also in package.json. -->
+
+**Current version: 1.2.5**
 
 ---
 
@@ -79,6 +81,13 @@ sudo apt-get install -f
 ## Patch notes
 
 Full history: [`CHANGELOG.md`](CHANGELOG.md).
+
+### 1.2.5
+
+- Logs split by day while the app stays open overnight.
+- Stopping one channel no longer kills recordings on other channels.
+- Fixed channels getting stuck “recording” after a short restart failure.
+- Less log spam from routine HLS CDN messages; 10‑minute cooldown when yt-dlp finds no formats.
 
 ### 1.2.4
 
