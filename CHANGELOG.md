@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.2.6 — 2026-07-31
+
+### Features
+- **Per-channel Stop button** next to streams that are actively recording — stops only that download, finalizes/merges, and moves the file into your destination folder
+- **Monitoring stays on** after a per-channel Stop (unlike **Stop Monitoring**, which ends detection for every channel)
+- **Automatic resume** when the channel is still live: a new recording segment starts as soon as finalize finishes (no need to wait for the next check interval)
+
+### Notes
+- Use per-channel **Stop** to split long streams into segments or free disk/temp mid-broadcast
+- Use **Stop Monitoring** when you want to fully stop watching and finalize everything
+
 ## 1.2.5 — 2026-07-27
 
 ### Bug fixes
