@@ -7,7 +7,7 @@ Desktop app that **watches YouTube channels** and **records livestreams** automa
 
 <!-- Public / end-user doc. Maintainer notes: docs/DEV.md (Forgejo). Version is also in package.json. -->
 
-**Current version: 1.2.6**
+**Current version: 1.2.7**
 
 ---
 
@@ -72,7 +72,10 @@ sudo apt-get install -f
 | Topic | Detail |
 |-------|--------|
 | **Stop vs Stop Monitoring** | **Stop** (per channel) saves that download and keeps watching; **Stop Monitoring** ends detection for all channels |
-| **Logs** | Help → **Open Logs Folder** (or the link at the bottom of the window) |
+| **Remove** | Removes the channel from the list; if it was recording, the current segment is still saved |
+| **Closing the window (X)** | Saves active recordings first (please-wait popup), then exits |
+| **Check interval** | Fixed at **20 seconds** (not configurable) |
+| **Logs** | Help → **Open Logs Folder** — send this file if something fails |
 | **Where tools live** | Windows: `%APPDATA%\yt-live-recorder\bin` · Linux: `~/.local/share/yt-live-recorder/bin` |
 | **Temp / scratch** | Safe to delete when the app is **not** recording: `%TEMP%\YTLiveRecorderTemp` or `/tmp/YTLiveRecorderTemp` |
 | **Public lives** | Usually work with cookies = **None** |
@@ -83,6 +86,13 @@ sudo apt-get install -f
 ## Patch notes
 
 Full history: [`CHANGELOG.md`](CHANGELOG.md).
+
+### 1.2.7
+
+- Faster live detection (page probe + yt-dlp only when needed); fixed **20s** check interval.
+- Closing the app (X) waits until recordings are stopped and moved to your folder.
+- Cleaner file names; best quality live formats; updated bundled **yt-dlp**.
+- Cookies note and UI polish; more readable logs for troubleshooting.
 
 ### 1.2.6
 
