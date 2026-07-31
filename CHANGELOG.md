@@ -1,5 +1,29 @@
 # Changelog
 
+## 1.2.7 — 2026-07-31
+
+### Features
+- **Faster live detection** — two-phase check: cheap page probe first, then yt-dlp only when needed; fixed **20s** check interval (no longer user-configurable)
+- **Smarter end detection** while recording — probe first; full yt-dlp only when the page looks offline (less hammering YouTube mid-stream)
+- **Reliable app close (X)** — shows a please-wait status window, stops downloads, moves files to your recordings folder, then exits
+- **Best quality lives** — `bestvideo*+bestaudio/best` with format sorting suited to live HLS; bundled **yt-dlp 2026.07.23** nightly for current YouTube
+- **Cleaner filenames** — `YYYY-MM-DD-HH-MM - Stream Title.mkv` (strips YouTube’s trailing clock from titles; no random suffix)
+
+### UX
+- Cookies hint: only needed for members-only / age-restricted streams
+- Separator between settings and Start/Stop Monitoring
+- **Remove** channel mid-recording still saves the segment, then drops that channel (no auto-resume)
+- Progress line shows the file name only (not full `Destination:` path)
+
+### Reliability
+- Hybrid save path so Stop/close does not double-copy the same segment to the NAS
+- Live-check queue, monitor re-entrancy guard, log prune on day roll, clearer WARN/ERROR text for testers
+- FFmpeg live HLS fix (`allowed_extensions`) for current stream URLs
+
+### Notes
+- Prefer **Stop Monitoring** or wait for the close status window to finish before force-killing the process
+- If a save fails, use Help → **Open Logs Folder** and look for WARN/ERROR lines
+
 ## 1.2.6 — 2026-07-31
 
 ### Features
