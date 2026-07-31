@@ -7,7 +7,7 @@ Desktop app that **watches YouTube channels** and **records livestreams** automa
 
 <!-- Public / end-user doc. Maintainer notes: docs/DEV.md (Forgejo). Version is also in package.json. -->
 
-**Current version: 1.2.7**
+**Current version: 1.2.8**
 
 ---
 
@@ -86,6 +86,11 @@ sudo apt-get install -f
 ## Patch notes
 
 Full history: [`CHANGELOG.md`](CHANGELOG.md).
+
+### 1.2.8
+
+- Fixed scheduled/upcoming streams flashing **Recording** then idle (no formats yet).
+- Cooldown channels no longer re-check YouTube every 20s.
 
 ### 1.2.7
 
