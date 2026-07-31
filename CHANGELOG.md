@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.8 — 2026-07-31
+
+### Bug fixes
+- **Scheduled / upcoming streams no longer flash Recording then idle** — pages like `@channel/live` for a not-yet-started stream often still contain `"style":"LIVE"` and `"isLive":true` while `"isLiveNow":false` / `"isUpcoming":true`. The HTTP probe no longer treats weak LIVE chrome as live when the stream is offline-now, and yt-dlp `is_upcoming` is treated as not live (so we do not start a download that immediately fails with “No video formats found”).
+- **Cooldown skips the live check** — channels waiting out a no-formats / error cooldown no longer re-run probe + yt-dlp every 20s (was spamming “starting record anyway” in the log).
+
 ## 1.2.7 — 2026-07-31
 
 ### Features
