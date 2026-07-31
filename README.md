@@ -7,7 +7,7 @@ Desktop app that **watches YouTube channels** and **records livestreams** automa
 
 <!-- Public / end-user doc. Maintainer notes: docs/DEV.md (Forgejo). Version is also in package.json. -->
 
-**Current version: 1.2.5**
+**Current version: 1.2.6**
 
 ---
 
@@ -39,7 +39,8 @@ Other files on the release page (`latest.yml`, `*.blockmap`, checksums) are for 
    3. Optionally set **Cookies from browser** if you need membership/age-restricted streams (close that browser first).
    4. Click **Start Monitoring**.
 6. When a channel goes live, recording starts automatically.
-7. Click **Stop Monitoring** when you want to stop. The app finalizes the file and moves it into  
+7. While a channel is **Recording**, click **Stop** next to that channel to save the current segment and keep monitoring. If the stream is still live, recording resumes automatically after the file is saved.
+8. Click **Stop Monitoring** when you want to stop watching entirely. The app finalizes any active files and moves them into  
    `your-folder\ChannelName\…` as a normal `.mp4` / `.mkv` (not a `.part` file).
 
 **Updates:** a green **Update x.y.z** badge may appear next to the title, or use **Help → Check for Updates…**.
@@ -70,6 +71,7 @@ sudo apt-get install -f
 
 | Topic | Detail |
 |-------|--------|
+| **Stop vs Stop Monitoring** | **Stop** (per channel) saves that download and keeps watching; **Stop Monitoring** ends detection for all channels |
 | **Logs** | Help → **Open Logs Folder** (or the link at the bottom of the window) |
 | **Where tools live** | Windows: `%APPDATA%\yt-live-recorder\bin` · Linux: `~/.local/share/yt-live-recorder/bin` |
 | **Temp / scratch** | Safe to delete when the app is **not** recording: `%TEMP%\YTLiveRecorderTemp` or `/tmp/YTLiveRecorderTemp` |
@@ -81,6 +83,12 @@ sudo apt-get install -f
 ## Patch notes
 
 Full history: [`CHANGELOG.md`](CHANGELOG.md).
+
+### 1.2.6
+
+- **Stop** button next to each channel that is downloading — saves that segment to your recordings folder.
+- Monitoring continues after a per-channel Stop; a new segment starts automatically if the channel is still live.
+- **Stop Monitoring** still fully stops watching and finalizes everything.
 
 ### 1.2.5
 
