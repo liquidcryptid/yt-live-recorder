@@ -7,7 +7,7 @@ Desktop app that **watches YouTube channels** and **records livestreams** automa
 
 <!-- Public / end-user doc. Maintainer notes: docs/DEV.md (Forgejo). Version is also in package.json. -->
 
-**Current version: 1.2.8**
+**Current version: 1.2.10**
 
 ---
 
@@ -86,6 +86,14 @@ sudo apt-get install -f
 ## Patch notes
 
 Full history: [`CHANGELOG.md`](CHANGELOG.md).
+
+### 1.2.10
+
+- **Long-run stability** — live checks (page probe + status) run in the main process instead of the UI, fixing a Chromium file-descriptor / shared-memory leak that grew over hours of monitoring many channels.
+
+### 1.2.9
+
+- Recording filenames use your computer’s local time (not UTC) in the date prefix.
 
 ### 1.2.8
 
