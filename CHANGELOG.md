@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.2.10 — 2026-08-01
+
+### Bug fixes
+- **Long-run Chromium FD / shared-memory leak while monitoring** — live probes and yt-dlp status checks no longer run inside the UI renderer. Multi-MB YouTube page fetches used Chromium Mojo shared memory and left deleted `/dev/shm` FDs growing for hours (often ~1k+ FDs after a day of 20s polls). Probes now use Node `fetch` + a queued yt-dlp status print in the **main process** (`lib/live-check.js`); the renderer only receives yes/no via IPC. Recording spawn is unchanged for this release (still `nodeIntegration` in the UI process).
+
+### Reliability
+- Probe HTML body capped at 3 MiB in main (markers appear earlier; less peak memory)
+- Live-check helper processes are killed from main on Stop Monitoring and quit
+
+### Notes
+- After upgrading, multi-hour monitoring should keep the UI process open file-descriptor count roughly flat (dozens), not climbing into the thousands
+- Concurrent recordings still use ~100 MB RAM each (yt-dlp + ffmpeg); that is expected, not this leak
+
+## 1.2.9 — 2026-07-31
+
+### Bug fixes
+- **Recording filenames use local time** — the `YYYY-MM-DD-HH-MM` prefix is the computer’s wall-clock time (not UTC), so evening streams no longer get the next day’s date when the machine is west of UTC
+
 ## 1.2.8 — 2026-07-31
 
 ### Bug fixes
