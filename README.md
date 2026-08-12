@@ -9,6 +9,8 @@ Desktop app that **watches YouTube channels** and **records livestreams** automa
 
 **Current version: 1.2.10**
 
+**Privacy:** [Privacy Policy](docs/PRIVACY.md) · Support: liquidcryptid@gmail.com
+
 ---
 
 ## Download
