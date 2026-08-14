@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.11 — 2026-08-12
+
+### Packaging
+- **Microsoft Store AppX tiles use the YTLiveRecorder icon** — `build/appx/` is generated from `build/icon.png` so electron-builder no longer ships the default Electron sample logos (Store certification 10.1.1)
+- Window and packaged resources now include the app icon (no Electron atom in the title bar)
+
 ## 1.2.10 — 2026-08-01
 
 ### Bug fixes
