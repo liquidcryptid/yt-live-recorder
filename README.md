@@ -7,7 +7,7 @@ Desktop app that **watches YouTube channels** and **records livestreams** automa
 
 <!-- Public / end-user doc. Maintainer notes: docs/DEV.md (Forgejo). Version is also in package.json. -->
 
-**Current version: 1.2.10**
+**Current version: 1.2.11**
 
 **Privacy:** [Privacy Policy](docs/PRIVACY.md) · Support: liquidcryptid@gmail.com
 
@@ -88,6 +88,10 @@ sudo apt-get install -f
 ## Patch notes
 
 Full history: [`CHANGELOG.md`](CHANGELOG.md).
+
+### 1.2.11
+
+- App window and Microsoft Store tiles use the YTLiveRecorder icon (not the default Electron artwork).
 
 ### 1.2.10
 
