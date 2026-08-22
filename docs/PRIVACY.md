@@ -59,10 +59,10 @@ The app does not include third-party advertising SDKs or analytics SDKs for mark
 
 ## Optional browser cookies
 
-If you set **Cookies from browser**, the app may use browser cookie data (via supported tools) so yt-dlp can access streams that require your logged-in session (for example members-only or age-restricted content).  
+If you check **Use cookies from Firefox**, the app copies Firefox cookie data into a local Netscape file under app data (`cookies.from-browser.txt`) so recordings can use your logged-in YouTube session (for example members-only or age-restricted content). The copy is refreshed when you Start Monitoring. Unchecking the box deletes that file. You can instead place your own `cookies.txt` in the same folder.
 
-- Only enable this if you understand that stream access uses **your** browser session.  
-- Close the browser first when prompted by documentation.  
+- Only enable this if you understand that stream access uses **your** Firefox YouTube session.  
+- You must be signed in to YouTube in Firefox; Firefox does not need to stay open.  
 - You are responsible for complying with YouTube’s terms and applicable law.
 
 ## Children
@@ -76,7 +76,7 @@ On Windows, the app needs access to:
 - The **recordings folder** you choose  
 - Local app data and temp folders it creates  
 - Network access to fetch live status and stream data  
-- Optionally, browser cookie stores if you enable that feature  
+- Optionally, Firefox cookie stores if you enable **Use cookies from Firefox**  
 
 It does not require you to create a Liquid Cryptid account.
 
@@ -84,7 +84,8 @@ It does not require you to create a Liquid Cryptid account.
 
 - Delete recordings by removing files from your chosen folder.  
 - Clear temp data when the app is **not** recording (`%TEMP%\YTLiveRecorderTemp`).  
-- Uninstall the app via Windows / Microsoft Store; you may also delete `%APPDATA%\yt-live-recorder` to remove settings, logs, and staged tools.
+- Browser cookie copies live in `%APPDATA%\yt-live-recorder\cookies.from-browser.txt`; uncheck **Use cookies from Firefox** or delete that folder to remove them.  
+- Uninstall the app via Windows / Microsoft Store; you may also delete `%APPDATA%\yt-live-recorder` to remove settings, logs, cookies, and staged tools.
 
 ## Third-party services
 
