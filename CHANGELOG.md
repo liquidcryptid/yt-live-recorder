@@ -1,5 +1,41 @@
 # Changelog
 
+## Unreleased
+
+## 1.3.0 — 2026-08-22
+
+### Security
+- **UI process is isolated** — yt-dlp/ffmpeg spawn, kill, and file save run in the main process. The window uses `nodeIntegration: false`, `contextIsolation: true`, a sandboxed preload, and a frozen `window.ytlr` allowlist (no free-form argv, no temp-folder access from the page). Closing the app still saves recordings if the UI process has crashed. Closing/reloading the window no longer kills other programs’ yt-dlp (unchanged: PID tree only).
+
+### Tools
+- **yt-dlp nightly 2026.08.20.234504** (was 2026.07.23.234303)
+
+### Features
+- **YouTube `--live-from-start`** — recordings start from the beginning of the stream (YouTube DVR) using yt-dlp’s native dash/m3u8 downloader (fixed upstream 2026.03.17 / #16254, in our 2026.08.20 nightly). If from-start is unavailable, real 403s before any bytes, or “no data blocks” at start, the app retries from the live edge. Per-channel **Stop** always resumes from the live edge. While catching up, auto-end does not kill the job just because `/live` looks offline (stalls after 3 minutes still save).
+- **Finished files are always `.mp4`** — Stop, stream-end, and a clean yt-dlp merge used to leave `.mkv`, `.mp4`, or `.f247.mkv` depending on how the job ended. Every published file is now MP4 (`--merge-output-format mp4` / `--remux-video mp4`, ffmpeg remux of leftovers with `+faststart`). Premiere, Resolve, Final Cut, and similar NLEs import MP4; MKV is a common reject. Codecs are still whatever YouTube served (often VP9/Opus or H.264/AAC); this is a remux, not a re-encode.
+- **Per-channel Stop no longer saves a broken `.f247.mkv`** — from-start writes separate video/audio fragments; a hard kill left a truncated video-only `.part`. Stop now asks yt-dlp to exit (Windows: `taskkill` without `/F`, 8s grace) then ffmpeg remuxes leftovers (`-c copy`, discardcorrupt, `+faststart`) into a closed `.mp4` with audio when the audio part exists.
+- **YouTube player clients** — without cookies, yt-dlp’s **default** clients (`formats=missing_pot` only). With Firefox cookies: `tv,web_safari,mweb,web_creator`. Forcing `android,ios,tv` on public lives skipped SABR URLs. A PO-token warning that *mentions* HTTP 403 is no longer treated as a from-start crash.
+- **Firefox cookies checkbox** — Chrome/Edge cookie options are removed. Check **Use cookies from Firefox** for members-only / age-restricted streams. You must be signed in to YouTube in Firefox; Firefox does not need to stay open. On Start Monitoring the app copies Firefox cookies to `%APPDATA%\yt-live-recorder\cookies.from-browser.txt`. A warning appears if those cookies are missing or out of date (open Firefox, sign in, Start Monitoring again).
+- **Download status shows stream title, size, and speed** — Catch-up / LIVE rows show the stream name with downloaded size and rate (e.g. `123.6 MiB · 76.3 KiB/s`). Fragment `current/total` is not shown (yt-dlp’s `.ytdl` index only moves when a DASH fragment *finishes*, so it looked stuck while the file was still growing). Catch-up closes and the row is **LIVE** once DVR catch-up finishes. After Stop, the next segment is **LIVE** only.
+- **Catch-up continues after the live ends** — if `/live` goes offline while DVR catch-up is still running, the job keeps grabbing remaining fragments (UI: **ENDED — finishing catch-up**). Auto-stop only if the VOD is private/removed/members-only, or catch-up stalls for 3 minutes with no new fragments.
+- **Stuck catch-up fails over to LIVE** — only if the fragment **index and disk size** are frozen ~75s (a real googlevideo hang). `.ytdl` `current_fragment.index` does not move until a DASH fragment *finishes*; 1080p frags can take over a minute while the `.part` still grows, which used to look stuck and abort a healthy catch-up.
+- **Catch-up downloads 8 DASH fragments at a time** (`--concurrent-fragments 8`). Do not pass `--throttled-rate` (that aborts slow DVR fragments). Live-edge stays sequential.
+- **Live channel no longer sits idle for 10 minutes after “No video formats found”** — if live-check already confirmed the stream, a miss retries in ~30s (Start Monitoring also clears that cooldown). Age-restricted lives wait 5 minutes and show a cookies hint instead of looping.
+- **Public lives do not need Firefox** — cookies stay opt-in for members-only / age-restricted only. Without cookies the app uses yt-dlp’s **default** clients (visionos + webpage), which return 1080 DVR (`399+140` / `248+140`). Forcing `android,ios,tv` skipped SABR URLs and broke catch-up on every public live. Age-restricted lives still need Firefox cookies — the row shows **AGE RESTRICTED: REQUIRES COOKIES** in red. Checking that box retries only those blocked streams and never stops recordings that are already working.
+
+### Bug fixes
+- **Catch-up no longer aborts when the live ends** — the ~75s DASH-hang failover (save + switch to live edge) was firing after `/live` went offline (log: `Did not get any data blocks` → “continuing catch-up of remaining DVR” → then “stuck — switching to LIVE”). There is no live edge then, so the partial file was saved and catch-up stopped. Failover now re-checks liveness; if the stream has ended, the job keeps going and, if the DVR URL is dead, resumes the **same file** from the VOD (`watch?v=`). Auto-save still happens if the VOD is gone or nothing arrives for 3 minutes.
+- **Catch-up matches CLI `--live-from-start` speed** — dropped `--throttled-rate 100K` (that flag is not a cap; it aborts a DASH fragment after 3s below 100 KiB/s and re-extracts the live, which is a VOD HTTP workaround). Slow DVR catch-up sat under 100 KiB/s for a long stretch, so the tripwire kept interrupting. Concurrent fragments for catch-up went from 3 to 8. Live-edge recordings stay sequential. There is still no `--limit-rate`.
+- **Catch-up row switches to LIVE without a fragment total** — YouTube live DVR almost never reports `fragment_count`, so the old “within 3 fragments of total for 5s” check never fired. A catch-up that had already reached live cadence (~15 frags / 30s, live bitrate) stayed on the Catch-up row. When the count is missing, catch-up is treated as done if fragments arrive at live-edge rate (not a burst) for ~12s.
+- **No 15-minute sit-out after a stream ends** — auto-end used to set a 900s cooldown, so a channel that dropped and came right back (tech issue, BRB) was ignored. After save, the next 20s check (or the immediate resume probe) can start a new file if they are live again.
+- **Stop Monitoring / stream end no longer kill other programs’ yt-dlp** — 1.2.5 stopped `taskkill /IM` while *this* app still had sibling recordings, but when the last channel in the app stopped (or on startup temp purge) it still ran `taskkill /IM yt-dlp.exe` / `pkill -x yt-dlp`, which aborted every yt-dlp on the machine. Stop now kills only that job’s PID tree; leftover lock cleanup only targets processes whose command line includes `YTLiveRecorderTemp`.
+- **Cookie file on the live probe hid live channels** — sending `.google.com` cookies to `youtube.com/@handle/live` redirected to Google `CookieMismatch` / sign-in, which has no LIVE markers, so the probe reported not live and never ran yt-dlp (e.g. @SekturVision). Probe Cookie header is YouTube-only; sign-in pages fall back to yt-dlp.
+- **Chrome/Edge cookies no longer abort recordings** — `--cookies-from-browser` on Windows often fails with “Could not copy Chrome cookie database” (browser lock / Chromium encryption). The app now detects that, records without browser cookies, and retries immediately so public lives still save. Members-only still needs Firefox, a closed browser, or `cookies.txt`.
+- **Firefox cookies recorded no formats** — cookie-safe YouTube clients need yt-dlp’s JS challenge solver. The app now passes `--js-runtimes node:<path>` (system Node, or Electron as Node) so n-challenge solving works and members/restricted lives can get playable formats.
+
+### Reliability
+- Recording logs now include extractor clients, yt-dlp pid, YouTube video id, cooldown remaining, and a warning when live-check says LIVE but yt-dlp listed no formats (so a silent sit-out is visible in Help → Open Logs Folder).
+
 ## 1.2.11 — 2026-08-12
 
 ### Packaging
@@ -113,7 +149,7 @@
 - Docs: `docs/UPDATES.md`, `npm run release:github` publish helper
 
 ### Publish
-- `build.publish` → `liquidcryptid/yt-live-recorder` on GitHub (public releases; Forgejo remains dev origin)
+- `build.publish` → `liquidcryptid/yt-live-recorder` on GitHub (public releases)
 - Optional feed override: `YT_LIVE_RECORDER_UPDATE_URL` (generic provider)
 
 ## 1.1.8 — 2026-07-25
