@@ -7,9 +7,9 @@ Desktop app that **watches YouTube channels** and **records livestreams** automa
 
 <!-- Public / end-user doc. Maintainer notes: docs/DEV.md (Forgejo). Version is also in package.json. -->
 
-**Current version: 1.2.11**
+**Current version: 1.3.0**
 
-**Privacy:** [Privacy Policy](docs/PRIVACY.md) · Support: liquidcryptid@gmail.com
+**Privacy:** [Privacy Policy](https://github.com/liquidcryptid/yt-live-recorder/blob/main/docs/PRIVACY.md) · Support: liquidcryptid@gmail.com
 
 ---
 
@@ -20,8 +20,7 @@ Get the latest build from **[GitHub Releases](https://github.com/liquidcryptid/y
 | Your computer | Download this file |
 |---------------|--------------------|
 | **Windows** (most people) | `YTLiveRecorder-Windows-Setup.exe` |
-| **Linux** (recommended) | `YTLiveRecorder-Linux.AppImage` |
-| **Linux** (package install) | `YTLiveRecorder-Linux.deb` |
+| **Linux** | `YTLiveRecorder-Linux.AppImage` |
 
 Other files on the release page (`latest.yml`, `*.blockmap`, checksums) are for **automatic updates** — you can ignore them for a first install.
 
@@ -38,16 +37,16 @@ Other files on the release page (`latest.yml`, `*.blockmap`, checksums) are for 
 5. In the app:
    1. **Browse** → choose a folder for finished recordings (local disk or network share).
    2. **Add channel** — type the channel handle (e.g. `liquid_cryptid`). The `@` is optional.
-   3. Optionally set **Cookies from browser** if you need membership/age-restricted streams (close that browser first).
+   3. Optionally check **Use cookies from Firefox** if you need membership/age-restricted streams. Sign in to YouTube in Firefox first; Firefox does not need to stay open.
    4. Click **Start Monitoring**.
 6. When a channel goes live, recording starts automatically.
 7. While a channel is **Recording**, click **Stop** next to that channel to save the current segment and keep monitoring. If the stream is still live, recording resumes automatically after the file is saved.
 8. Click **Stop Monitoring** when you want to stop watching entirely. The app finalizes any active files and moves them into  
-   `your-folder\ChannelName\…` as a normal `.mp4` / `.mkv` (not a `.part` file).
+   `your-folder\ChannelName\…` as a normal `.mp4` (not a `.part` or `.mkv` file).
 
 **Updates:** a green **Update x.y.z** badge may appear next to the title, or use **Help → Check for Updates…**.
 
-### Linux (AppImage — recommended)
+### Linux (AppImage)
 
 1. Download **`YTLiveRecorder-Linux.AppImage`**.
 2. Make it executable and run:
@@ -59,35 +58,35 @@ Other files on the release page (`latest.yml`, `*.blockmap`, checksums) are for 
 
 AppImage supports **in-app updates** the same way as Windows.
 
-### Linux (.deb)
-
-```bash
-sudo dpkg -i YTLiveRecorder-Linux.deb
-# if needed:
-sudo apt-get install -f
-```
-
-`.deb` installs do **not** use the in-app installer updater; download a new `.deb` from Releases, or switch to the AppImage for auto-update.
-
 ### Tips
 
 | Topic | Detail |
 |-------|--------|
-| **Stop vs Stop Monitoring** | **Stop** (per channel) saves that download and keeps watching; **Stop Monitoring** ends detection for all channels |
+| **Stop vs Stop Monitoring** | **Stop** (per channel) saves that download and keeps watching; if still live, the next segment starts from the **live edge** (not from the beginning again). **Stop Monitoring** ends detection for all channels |
 | **Remove** | Removes the channel from the list; if it was recording, the current segment is still saved |
 | **Closing the window (X)** | Saves active recordings first (please-wait popup), then exits |
 | **Check interval** | Fixed at **20 seconds** (not configurable) |
 | **Logs** | Help → **Open Logs Folder** — send this file if something fails |
 | **Where tools live** | Windows: `%APPDATA%\yt-live-recorder\bin` · Linux: `~/.local/share/yt-live-recorder/bin` |
 | **Temp / scratch** | Safe to delete when the app is **not** recording: `%TEMP%\YTLiveRecorderTemp` or `/tmp/YTLiveRecorderTemp` |
-| **Public lives** | Usually work with cookies = **None** |
-| **Members-only lives** | Try Firefox/Chrome cookies; close the browser first |
+| **From the start** | Lives record from the beginning of YouTube’s rewind window when available; the row shows **Catch-up** (title, size/speed) then **LIVE** once rewind has reached the live edge — even if YouTube never reports a fragment total. If catch-up hangs **while still live** (~75s with no new bytes), that segment is saved and recording continues from the **live edge**. If the channel ends the live during catch-up, the **same file** keeps going; a dead DVR URL is resumed from the VOD. Auto-save if the VOD is gone or nothing arrives for 3 minutes. After save, the next 20s check can start a new file immediately if they come back. After **Stop**, the next segment is **LIVE** only |
+| **Public lives** | Usually work with **Use cookies from Firefox** unchecked |
+| **Members-only lives** | Check **Use cookies from Firefox**. Sign in to YouTube in Firefox; Firefox does not need to stay open. The app copies cookies on Start Monitoring and warns if they go out of date. |
+| **File format** | Finished recordings are always **MP4** (editor-friendly; same container whether you Stop or the stream ends). |
 
 ---
 
 ## Patch notes
 
 Full history: [`CHANGELOG.md`](CHANGELOG.md).
+
+### 1.3.0
+
+- Recordings, cookies, and live checks run in the main process. The window no longer has Node access (safer if a page is ever compromised). Closing the app still saves files if the UI crashes.
+- Lives start from the beginning of YouTube’s rewind window when available (**Catch-up** then **LIVE**). Finished files are always **MP4**.
+- Catch-up keeps going after a live ends (same file; resumes from the VOD if the live URL dies). Faster rewind; the row switches to **LIVE** even without a fragment total. No 15-minute wait if they come back.
+- **Use cookies from Firefox** for members-only / age-restricted streams. Firefox does not need to stay open.
+- A live channel that briefly has “no formats” is retried in ~30 seconds (Start Monitoring also retries immediately).
 
 ### 1.2.11
 
