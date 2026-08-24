@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## 1.3.1 — 2026-08-23
+
+### Bug fixes
+- **Long from-start recordings are no longer truncated on save** — killing yt-dlp at stream end leaves `.f248.mp4.part` + `.f140.mp4.part`. ffmpeg remux used `-shortest` and `discardcorrupt`, so a YouTube DASH timestamp gap (common on multi-hour lives) stopped the copy at the first A/V overlap. Overnight jobs saved minutes (or seconds) of an 8-hour stream. Remux now copies the full parts (`-max_interleave_delta 0`, no `-shortest`) and retries a two-pass remux if the output is much smaller than the inputs. Auto-end waits ~20s for yt-dlp to close those parts (was 5s).
+- **LIVE DASH hang after catch-up was invisible** — the ~75s “no new bytes” failover only ran during catch-up. Once the row said LIVE, a hung googlevideo URL sat there until `/live` went offline, then remuxed whatever tiny prefix existed. The same stall now saves and switches to the live edge. Size is logged every 5 minutes while LIVE so this shows up in the log.
+- **In-progress yt-dlp merge is not treated as a finished file** — `title.temp.mp4` has no `moov` yet (killed mid-merge). Finalize skipped the real `.fXXX` parts and published a broken `.temp.mp4`. Those temp merges are ignored; leftovers are remuxed instead.
+
 ## 1.3.0 — 2026-08-22
 
 ### Security
