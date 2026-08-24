@@ -7,7 +7,7 @@ Desktop app that **watches YouTube channels** and **records livestreams** automa
 
 <!-- Public / end-user doc. Maintainer notes: docs/DEV.md (Forgejo). Version is also in package.json. -->
 
-**Current version: 1.3.0**
+**Current version: 1.3.1**
 
 **Privacy:** [Privacy Policy](https://github.com/liquidcryptid/yt-live-recorder/blob/main/docs/PRIVACY.md) · Support: liquidcryptid@gmail.com
 
@@ -69,7 +69,7 @@ AppImage supports **in-app updates** the same way as Windows.
 | **Logs** | Help → **Open Logs Folder** — send this file if something fails |
 | **Where tools live** | Windows: `%APPDATA%\yt-live-recorder\bin` · Linux: `~/.local/share/yt-live-recorder/bin` |
 | **Temp / scratch** | Safe to delete when the app is **not** recording: `%TEMP%\YTLiveRecorderTemp` or `/tmp/YTLiveRecorderTemp` |
-| **From the start** | Lives record from the beginning of YouTube’s rewind window when available; the row shows **Catch-up** (title, size/speed) then **LIVE** once rewind has reached the live edge — even if YouTube never reports a fragment total. If catch-up hangs **while still live** (~75s with no new bytes), that segment is saved and recording continues from the **live edge**. If the channel ends the live during catch-up, the **same file** keeps going; a dead DVR URL is resumed from the VOD. Auto-save if the VOD is gone or nothing arrives for 3 minutes. After save, the next 20s check can start a new file immediately if they come back. After **Stop**, the next segment is **LIVE** only |
+| **From the start** | Lives record from the beginning of YouTube’s rewind window when available; the row shows **Catch-up** (title, size/speed) then **LIVE** once rewind has reached the live edge — even if YouTube never reports a fragment total. If catch-up **or LIVE** hangs while still live (~75s with no new bytes), that segment is saved and recording continues from the **live edge**. If the channel ends the live during catch-up, the **same file** keeps going; a dead DVR URL is resumed from the VOD. Auto-save if the VOD is gone or nothing arrives for 3 minutes. After save, the next 20s check can start a new file immediately if they come back. After **Stop**, the next segment is **LIVE** only |
 | **Public lives** | Usually work with **Use cookies from Firefox** unchecked |
 | **Members-only lives** | Check **Use cookies from Firefox**. Sign in to YouTube in Firefox; Firefox does not need to stay open. The app copies cookies on Start Monitoring and warns if they go out of date. |
 | **File format** | Finished recordings are always **MP4** (editor-friendly; same container whether you Stop or the stream ends). |
@@ -79,6 +79,12 @@ AppImage supports **in-app updates** the same way as Windows.
 ## Patch notes
 
 Full history: [`CHANGELOG.md`](CHANGELOG.md).
+
+### 1.3.1
+
+- Multi-hour from-start recordings keep their full length when the stream ends (ffmpeg remux no longer stops at the first video/audio timestamp gap).
+- A hung download after the row already says **LIVE** is saved and continued from the live edge (same ~75s stall as catch-up).
+- An in-progress yt-dlp merge (`.temp.mp4`) is no longer published as the finished file.
 
 ### 1.3.0
 
