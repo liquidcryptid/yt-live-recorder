@@ -1,6 +1,6 @@
 # Privacy Policy — YTLiveRecorder
 
-**Last updated:** 2026-08-12  
+**Last updated:** 2026-08-24  
 **Publisher:** Liquid Cryptid  
 **Contact:** liquidcryptid@gmail.com  
 **Product:** YTLiveRecorder (including the Microsoft Store edition)
@@ -33,7 +33,7 @@ The app may create or use local files such as:
 | Settings (folder path, channel list, cookie browser preference) | `%APPDATA%\yt-live-recorder\settings.json` | Remember your preferences |
 | Application logs | `%APPDATA%\yt-live-recorder\logs\` | Diagnose problems |
 | Staged tools (yt-dlp, ffmpeg copies) | `%APPDATA%\yt-live-recorder\bin\` | Run recordings reliably |
-| Temporary recording segments | `%TEMP%\YTLiveRecorderTemp\` | In-progress downloads before finalize |
+| Temporary recording segments | `%LOCALAPPDATA%\yt-live-recorder\YTLiveRecorderTemp\` (Linux: `~/.cache/yt-live-recorder/YTLiveRecorderTemp`) | In-progress downloads before finalize |
 | Finished recordings | The folder **you** select | Your media files |
 | Optional cookies export | Under app data (if you enable browser cookies) | Access membership/age-restricted streams **you** are allowed to view |
 
@@ -74,7 +74,7 @@ YTLiveRecorder is a general-purpose desktop utility. It is not directed at child
 On Windows, the app needs access to:
 
 - The **recordings folder** you choose  
-- Local app data and temp folders it creates  
+- Local app data and cache folders it creates  
 - Network access to fetch live status and stream data  
 - Optionally, Firefox cookie stores if you enable **Use cookies from Firefox**  
 
@@ -83,9 +83,9 @@ It does not require you to create a Liquid Cryptid account.
 ## Data retention and deletion
 
 - Delete recordings by removing files from your chosen folder.  
-- Clear temp data when the app is **not** recording (`%TEMP%\YTLiveRecorderTemp`).  
+- Clear temp data when the app is **not** recording (`%LOCALAPPDATA%\yt-live-recorder\YTLiveRecorderTemp`, or `~/.cache/yt-live-recorder/YTLiveRecorderTemp` on Linux).  
 - Browser cookie copies live in `%APPDATA%\yt-live-recorder\cookies.from-browser.txt`; uncheck **Use cookies from Firefox** or delete that folder to remove them.  
-- Uninstall the app via Windows / Microsoft Store; you may also delete `%APPDATA%\yt-live-recorder` to remove settings, logs, cookies, and staged tools.
+- Uninstall the app via Windows / Microsoft Store; you may also delete `%APPDATA%\yt-live-recorder` (settings, logs, cookies, staged tools) and `%LOCALAPPDATA%\yt-live-recorder` (recording scratch). On Linux, also `~/.cache/yt-live-recorder`.
 
 ## Third-party services
 
