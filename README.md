@@ -7,7 +7,7 @@ Desktop app that **watches YouTube channels** and **records livestreams** automa
 
 <!-- Public / end-user doc. Maintainer notes: docs/DEV.md (Forgejo). Version is also in package.json. -->
 
-**Current version: 1.3.1**
+**Current version: 1.3.2**
 
 **Privacy:** [Privacy Policy](https://github.com/liquidcryptid/yt-live-recorder/blob/main/docs/PRIVACY.md) · Support: liquidcryptid@gmail.com
 
@@ -68,8 +68,8 @@ AppImage supports **in-app updates** the same way as Windows.
 | **Check interval** | Fixed at **20 seconds** (not configurable) |
 | **Logs** | Help → **Open Logs Folder** — send this file if something fails |
 | **Where tools live** | Windows: `%APPDATA%\yt-live-recorder\bin` · Linux: `~/.local/share/yt-live-recorder/bin` |
-| **Temp / scratch** | Safe to delete when the app is **not** recording: `%TEMP%\YTLiveRecorderTemp` or `/tmp/YTLiveRecorderTemp` |
-| **From the start** | Lives record from the beginning of YouTube’s rewind window when available; the row shows **Catch-up** (title, size/speed) then **LIVE** once rewind has reached the live edge — even if YouTube never reports a fragment total. If catch-up **or LIVE** hangs while still live (~75s with no new bytes), that segment is saved and recording continues from the **live edge**. If the channel ends the live during catch-up, the **same file** keeps going; a dead DVR URL is resumed from the VOD. Auto-save if the VOD is gone or nothing arrives for 3 minutes. After save, the next 20s check can start a new file immediately if they come back. After **Stop**, the next segment is **LIVE** only |
+| **Temp / scratch** | Safe to delete when the app is **not** recording: `%LOCALAPPDATA%\yt-live-recorder\YTLiveRecorderTemp` or `~/.cache/yt-live-recorder/YTLiveRecorderTemp` (on disk, not `/tmp`) |
+| **From the start** | Lives record from the beginning of YouTube’s rewind window when available; the row shows **Catch-up** (title, size/speed) then **LIVE** once rewind has reached the live edge. If the live ends before rewind is done, the **same file** keeps grabbing remaining DVR (**ENDED — finishing catch-up**). If yt-dlp drops while they are **still live**, it is restarted on the same file. If nothing is written for a minute after the live ended, the file is force-saved and the channel goes back to live detection. A new live is a **new** from-start recording. After **Stop**, the next segment is **LIVE** only |
 | **Public lives** | Usually work with **Use cookies from Firefox** unchecked |
 | **Members-only lives** | Check **Use cookies from Firefox**. Sign in to YouTube in Firefox; Firefox does not need to stay open. The app copies cookies on Start Monitoring and warns if they go out of date. |
 | **File format** | Finished recordings are always **MP4** (editor-friendly; same container whether you Stop or the stream ends). |
@@ -79,6 +79,14 @@ AppImage supports **in-app updates** the same way as Windows.
 ## Patch notes
 
 Full history: [`CHANGELOG.md`](CHANGELOG.md).
+
+### 1.3.2
+
+- From-start is one yt-dlp job, like the CLI (`@handle/live`). A connection drop restarts it on the **same file**. If the live ends during catch-up, that same file keeps going until DVR is done. After the file is saved, the channel goes back to live detection — a later live is a new Catch-up.
+- The Catch-up row becomes **LIVE** only when both video and audio are at the DVR head (audio often finishes rewind first).
+- If save/remux fails (for example the disk is full), leftover parts are left in the temp folder instead of being deleted.
+- Cookie-client JS challenges use the Electron binary as Node (same as the installer). A local Deno install is not used.
+- In-progress recordings scratch the disk cache (`~/.cache/yt-live-recorder` / `%LOCALAPPDATA%\yt-live-recorder`), not `/tmp` (often a RAM disk).
 
 ### 1.3.1
 
