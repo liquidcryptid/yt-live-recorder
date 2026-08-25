@@ -1,6 +1,18 @@
 # Changelog
 
-## Unreleased
+## 1.3.2 — 2026-08-24
+
+### Changes
+- **Let yt-dlp run the live** — one CLI-like `--live-from-start --continue` job on `@handle/live`. Catch-up vs LIVE is a UI label. A connection drop (yt-dlp dies while `/live` is still up) restarts yt-dlp on the **same file**. If the live ends during catch-up, that same file keeps grabbing remaining DVR (UI: **ENDED — finishing catch-up**). When the live has ended and nothing is written for **60 seconds**, the file is saved and the channel goes back on the 20s live-detect loop. A new live is a new from-start job. Per-channel Stop still splits and resumes from the live edge. Cookies unchanged.
+- **From-start args match a working CLI** — `bestvideo[height<=?1080]+bestaudio/best`, no `-N 8`, no forced native dash, no `formats=missing_pot` unless Firefox cookies are on. Downloads always start at `@handle/live`.
+- **JS runtime matches the installer** — Deno is not used even if it is on PATH (`npm start` used to pick a local Deno). yt-dlp gets `--js-runtimes node:` with the Electron binary as Node, same as a packaged build. Public lives do not need it.
+- **Recording scratch is on disk cache, not `/tmp`** — Linux `/tmp` is often a small RAM disk (tmpfs). Overnight lives filled it (`Errno 28`) while the SSD still had space. Scratch is now `~/.cache/yt-live-recorder/YTLiveRecorderTemp` (Windows: `%LOCALAPPDATA%\yt-live-recorder\YTLiveRecorderTemp`). Old `/tmp/YTLiveRecorderTemp` is not auto-deleted.
+
+### Bug fixes
+- **Channel stop/restart is not treated as a connection drop** — `/live` offline → wait for yt-dlp (force-save if nothing is written for 60s) → move the file → live detection. If catch-up is still unfinished and yt-dlp drops, `--continue` that video’s VOD (`watch?v=`), not `/live` (which may already be a new stream). Connection-drop resume (`@handle/live`, same file) only runs while the channel is **still live**.
+- **LIVE label waits for both video and audio** — YouTube can report `109/3071` on video while audio is already `3575/3575`. Using the lagging total kept the row on Catch-up at live bitrate. Both `.ytdl` streams within 3 fragments of their totals (or fragment index at live-edge rate for ~12s) flips to LIVE.
+- **Failed remux no longer deletes the recording** — if ffmpeg cannot produce MP4 (disk full, etc.), leftover parts stay in the temp folder instead of being deleted.
+- **On save, extra audio is trimmed if video died early** — leftover remux of split DASH can have hours of AAC after VP9 stopped. If audio is ≥15 minutes longer than a real video duration, audio is cut to the video end. Leftover `-FragN` files are joined when the `.part` is empty.
 
 ## 1.3.1 — 2026-08-23
 
