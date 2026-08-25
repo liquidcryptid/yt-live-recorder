@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.3.3 — 2026-08-25
+
+### Bug fixes
+- **LIVE size and speed after per-channel Stop** — Stop restarts from the live edge (`--no-live-from-start`). The 1s size/speed ticker only sampled `--live-from-start` jobs, so the LIVE row came back with no KiB/s. The ticker now samples every active recording; live-edge segments are LIVE from the first byte and use disk size/rate (HLS/ffmpeg rarely fills yt-dlp `progress.speed`).
+- **Stop leaves other people’s yt-dlp alone** — never `taskkill /IM` / `pkill -x`. Stop kills the spawned PID tree, then only yt-dlp/ffmpeg/ffprobe whose command line includes this app’s `YTLiveRecorderTemp` scratch and that segment’s `rec-…` folder. PyInstaller can exit the wrapper while a child keeps writing; that leftover is now stopped so remux is not EBUSY. A yt-dlp you started yourself is not matched.
+- **Linux Stop leftover kill matches Windows** — the bundled yt-dlp is also PyInstaller: SIGKILL of the wrapper left the child running (reparented to init). Stop/resume snapshot-kill that tree (Linux `/T`) and session-sweep leftovers. Distro `python3 …/yt-dlp` is matched too; unrelated yt-dlp is not.
+
 ## 1.3.2 — 2026-08-24
 
 ### Changes
