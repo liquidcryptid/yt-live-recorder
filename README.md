@@ -7,7 +7,7 @@ Desktop app that **watches YouTube channels** and **records livestreams** automa
 
 <!-- Public / end-user doc. Maintainer notes: docs/DEV.md (Forgejo). Version is also in package.json. -->
 
-**Current version: 1.3.2**
+**Current version: 1.3.3**
 
 **Privacy:** [Privacy Policy](https://github.com/liquidcryptid/yt-live-recorder/blob/main/docs/PRIVACY.md) · Support: liquidcryptid@gmail.com
 
@@ -68,7 +68,7 @@ AppImage supports **in-app updates** the same way as Windows.
 | **Check interval** | Fixed at **20 seconds** (not configurable) |
 | **Logs** | Help → **Open Logs Folder** — send this file if something fails |
 | **Where tools live** | Windows: `%APPDATA%\yt-live-recorder\bin` · Linux: `~/.local/share/yt-live-recorder/bin` |
-| **Temp / scratch** | Safe to delete when the app is **not** recording: `%LOCALAPPDATA%\yt-live-recorder\YTLiveRecorderTemp` or `~/.cache/yt-live-recorder/YTLiveRecorderTemp` (on disk, not `/tmp`) |
+| **Temp / scratch** | Safe to delete when the app is **not** recording: `%LOCALAPPDATA%\yt-live-recorder\YTLiveRecorderTemp` or `~/.cache/yt-live-recorder/YTLiveRecorderTemp` (on disk, not `/tmp`). Closing the app can leave the last copied file there until the next launch (startup clears it). |
 | **From the start** | Lives record from the beginning of YouTube’s rewind window when available; the row shows **Catch-up** (title, size/speed) then **LIVE** once rewind has reached the live edge. If the live ends before rewind is done, the **same file** keeps grabbing remaining DVR (**ENDED — finishing catch-up**). If yt-dlp drops while they are **still live**, it is restarted on the same file. If nothing is written for a minute after the live ended, the file is force-saved and the channel goes back to live detection. A new live is a **new** from-start recording. After **Stop**, the next segment is **LIVE** only |
 | **Public lives** | Usually work with **Use cookies from Firefox** unchecked |
 | **Members-only lives** | Check **Use cookies from Firefox**. Sign in to YouTube in Firefox; Firefox does not need to stay open. The app copies cookies on Start Monitoring and warns if they go out of date. |
@@ -79,6 +79,11 @@ AppImage supports **in-app updates** the same way as Windows.
 ## Patch notes
 
 Full history: [`CHANGELOG.md`](CHANGELOG.md).
+
+### 1.3.3
+
+- After per-channel **Stop**, the new LIVE row shows size and download speed again (live-edge HLS).
+- Stop only ends this app’s yt-dlp/ffmpeg for that segment (Windows and Linux). Other yt-dlp downloads on the same PC are left running.
 
 ### 1.3.2
 
