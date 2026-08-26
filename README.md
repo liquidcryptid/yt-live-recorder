@@ -7,7 +7,7 @@ Desktop app that **watches YouTube channels** and **records livestreams** automa
 
 <!-- Public / end-user doc. Maintainer notes: docs/DEV.md (Forgejo). Version is also in package.json. -->
 
-**Current version: 1.3.3**
+**Current version: 1.3.4**
 
 **Privacy:** [Privacy Policy](https://github.com/liquidcryptid/yt-live-recorder/blob/main/docs/PRIVACY.md) · Support: liquidcryptid@gmail.com
 
@@ -66,7 +66,7 @@ AppImage supports **in-app updates** the same way as Windows.
 | **Remove** | Removes the channel from the list; if it was recording, the current segment is still saved |
 | **Closing the window (X)** | Saves active recordings first (please-wait popup), then exits |
 | **Check interval** | Fixed at **20 seconds** (not configurable) |
-| **Logs** | Help → **Open Logs Folder** — send this file if something fails |
+| **Logs** | Help → **Open Logs Folder** — timestamps are local time; send this file if something fails |
 | **Where tools live** | Windows: `%APPDATA%\yt-live-recorder\bin` · Linux: `~/.local/share/yt-live-recorder/bin` |
 | **Temp / scratch** | Safe to delete when the app is **not** recording: `%LOCALAPPDATA%\yt-live-recorder\YTLiveRecorderTemp` or `~/.cache/yt-live-recorder/YTLiveRecorderTemp` (on disk, not `/tmp`). Closing the app can leave the last copied file there until the next launch (startup clears it). |
 | **From the start** | Lives record from the beginning of YouTube’s rewind window when available; the row shows **Catch-up** (title, size/speed) then **LIVE** once rewind has reached the live edge. If the live ends before rewind is done, the **same file** keeps grabbing remaining DVR (**ENDED — finishing catch-up**). If yt-dlp drops while they are **still live**, it is restarted on the same file. If nothing is written for a minute after the live ended, the file is force-saved and the channel goes back to live detection. A new live is a **new** from-start recording. After **Stop**, the next segment is **LIVE** only |
@@ -79,6 +79,12 @@ AppImage supports **in-app updates** the same way as Windows.
 ## Patch notes
 
 Full history: [`CHANGELOG.md`](CHANGELOG.md).
+
+### 1.3.4
+
+- A finished livestream is no longer left only in the temp folder when yt-dlp exits while monitoring is still on.
+- **Help → About**: closing the window with **X** (or Esc) just dismisses it; it no longer opens the logs folder.
+- Log files and log line times use your computer’s local clock (same idea as the recording filename date prefix).
 
 ### 1.3.3
 
