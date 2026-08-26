@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.3.4 — 2026-08-26
+
+### Bug fixes
+- **Stream-end save is not dropped while the monitor loop is running** — yt-dlp exit 1 (live ended, `Did not get any data blocks`) starts an async “still live?” check before save. `hasActiveRecording` treated the dead process as a stale slot and deleted it, so the close handler returned without copying the MP4. The check is now read-only; only save/retry paths clear the slot.
+- **Help → About no longer opens the logs folder when you close the window with X** — Windows maps the title-bar close button to cancel. That was hitting **Open Logs Folder** (the second button). Esc and X now just dismiss the dialog.
+- **Log timestamps and daily log files use local time** — line stamps and `yt-live-recorder-YYYY-MM-DD.log` follow the computer’s clock (and roll at local midnight), not UTC. Recording filename prefixes were already local.
+
 ## 1.3.3 — 2026-08-25
 
 ### Bug fixes
