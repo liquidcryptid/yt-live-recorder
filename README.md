@@ -7,7 +7,7 @@ Desktop app that **watches YouTube channels** and **records livestreams** automa
 
 <!-- Public / end-user doc. Maintainer notes: docs/DEV.md (Forgejo). Version is also in package.json. -->
 
-**Current version: 1.3.5**
+**Current version: 1.3.6**
 
 **Privacy:** [Privacy Policy](https://github.com/liquidcryptid/yt-live-recorder/blob/main/docs/PRIVACY.md) · Support: liquidcryptid@gmail.com
 
@@ -37,7 +37,7 @@ Other files on the release page (`latest.yml`, `*.blockmap`, checksums) are for 
 5. In the app:
    1. **Browse** → choose a folder for finished recordings (local disk or network share).
    2. **Add channel** — type the channel handle (e.g. `liquid_cryptid`). The `@` is optional.
-   3. Optionally check **Use cookies from Firefox** if you need membership/age-restricted streams. Sign in to YouTube in Firefox first; Firefox does not need to stay open.
+   3. Optionally check **Use cookies from Firefox** if you need membership/age-restricted streams. Public lives record without cookies; if yt-dlp cannot start a stream, that channel is retried with the copied Firefox cookies. Sign in to YouTube in Firefox first; Firefox does not need to stay open.
    4. Click **Start Monitoring**.
 6. When a channel goes live, recording starts automatically.
 7. While a channel is **Recording**, click **Stop** next to that channel to save the current segment and keep monitoring. If the stream is still live, recording resumes automatically after the file is saved.
@@ -69,16 +69,22 @@ AppImage supports **in-app updates** the same way as Windows.
 | **Logs** | Help → **Open Logs Folder** — timestamps are local time; send this file if something fails |
 | **Where tools live** | Windows: `%APPDATA%\yt-live-recorder\bin` · Linux: `~/.local/share/yt-live-recorder/bin` |
 | **Temp / scratch** | Safe to delete when the app is **not** recording: `%LOCALAPPDATA%\yt-live-recorder\YTLiveRecorderTemp` or `~/.cache/yt-live-recorder/YTLiveRecorderTemp` (on disk, not `/tmp`). Closing the app can leave the last copied file there until the next launch (startup clears it). |
-| **From the start** | Lives record from the beginning of YouTube’s rewind window when available; the row shows **Catch-up** (title, size/speed) then **LIVE** once rewind has actually reached the live edge (not while thousands of fragments are still outstanding). If the live ends before rewind is done, the **same file** keeps grabbing remaining DVR (**ENDED — finishing catch-up**). If yt-dlp drops while they are **still live**, or video stalls while audio keeps going, it is restarted on the same file. If nothing is written for a minute after the live ended, the file is force-saved and the channel goes back to live detection. A new live is a **new** from-start recording. After **Stop**, the next segment is **LIVE** only |
-| **Public lives** | Usually work with **Use cookies from Firefox** unchecked |
-| **Members-only lives** | Check **Use cookies from Firefox**. Sign in to YouTube in Firefox; Firefox does not need to stay open. The app copies cookies on Start Monitoring and warns if they go out of date. |
-| **File format** | Finished recordings are always **MP4**. When YouTube offers it, the app grabs **H.264 + AAC** (plays in VLC / Kdenlive without transcoding). Otherwise it falls back to whatever YouTube served (often VP9 + AAC). |
+| **From the start** | Lives record from the beginning of YouTube’s rewind window when available; the row shows **Catch-up** (title, size/speed) then **LIVE** once rewind has actually reached the live edge (not while thousands of fragments are still outstanding). If the live ends before rewind is done, the **same file** keeps grabbing remaining DVR (**ENDED — finishing catch-up**). If yt-dlp itself exits while they are **still live**, it is restarted on the same file. If nothing is written for a minute after the live ended, the file is force-saved and the channel goes back to live detection. A new live is a **new** from-start recording. After **Stop**, the next segment is **LIVE** only |
+| **Public lives** | Record without cookies (same as a CLI `--live-from-start`). The Firefox checkbox is not used unless yt-dlp aborts before any video |
+| **Members-only lives** | Check **Use cookies from Firefox**. Sign in to YouTube in Firefox; Firefox does not need to stay open. The app copies cookies on Start Monitoring and retries with them only if the no-cookie job cannot start. |
+| **File format** | Finished recordings are always **MP4**. The app prefers **H.264 + AAC** when YouTube offers it (plays in VLC / Kdenlive without transcoding). Otherwise it uses whatever YouTube served (often VP9 + AAC). |
 
 ---
 
 ## Patch notes
 
 Full history: [`CHANGELOG.md`](CHANGELOG.md).
+
+### 1.3.6
+
+- From-start is left running (no abort-on-missing-fragment, no kill/restart because video looks stalled).
+- Still prefers **H.264 + AAC** from YouTube when it is listed; falls back to VP9 + AAC.
+- Public lives start **without** cookies. Firefox cookies are used only if that first job aborts before any video (members-only / age-restricted).
 
 ### 1.3.5
 
