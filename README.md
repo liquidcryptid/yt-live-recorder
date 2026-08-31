@@ -7,7 +7,7 @@ Desktop app that **watches YouTube channels** and **records livestreams** automa
 
 <!-- Public / end-user doc. Maintainer notes: docs/DEV.md (Forgejo). Version is also in package.json. -->
 
-**Current version: 1.3.4**
+**Current version: 1.3.5**
 
 **Privacy:** [Privacy Policy](https://github.com/liquidcryptid/yt-live-recorder/blob/main/docs/PRIVACY.md) · Support: liquidcryptid@gmail.com
 
@@ -69,16 +69,22 @@ AppImage supports **in-app updates** the same way as Windows.
 | **Logs** | Help → **Open Logs Folder** — timestamps are local time; send this file if something fails |
 | **Where tools live** | Windows: `%APPDATA%\yt-live-recorder\bin` · Linux: `~/.local/share/yt-live-recorder/bin` |
 | **Temp / scratch** | Safe to delete when the app is **not** recording: `%LOCALAPPDATA%\yt-live-recorder\YTLiveRecorderTemp` or `~/.cache/yt-live-recorder/YTLiveRecorderTemp` (on disk, not `/tmp`). Closing the app can leave the last copied file there until the next launch (startup clears it). |
-| **From the start** | Lives record from the beginning of YouTube’s rewind window when available; the row shows **Catch-up** (title, size/speed) then **LIVE** once rewind has reached the live edge. If the live ends before rewind is done, the **same file** keeps grabbing remaining DVR (**ENDED — finishing catch-up**). If yt-dlp drops while they are **still live**, it is restarted on the same file. If nothing is written for a minute after the live ended, the file is force-saved and the channel goes back to live detection. A new live is a **new** from-start recording. After **Stop**, the next segment is **LIVE** only |
+| **From the start** | Lives record from the beginning of YouTube’s rewind window when available; the row shows **Catch-up** (title, size/speed) then **LIVE** once rewind has actually reached the live edge (not while thousands of fragments are still outstanding). If the live ends before rewind is done, the **same file** keeps grabbing remaining DVR (**ENDED — finishing catch-up**). If yt-dlp drops while they are **still live**, or video stalls while audio keeps going, it is restarted on the same file. If nothing is written for a minute after the live ended, the file is force-saved and the channel goes back to live detection. A new live is a **new** from-start recording. After **Stop**, the next segment is **LIVE** only |
 | **Public lives** | Usually work with **Use cookies from Firefox** unchecked |
 | **Members-only lives** | Check **Use cookies from Firefox**. Sign in to YouTube in Firefox; Firefox does not need to stay open. The app copies cookies on Start Monitoring and warns if they go out of date. |
-| **File format** | Finished recordings are always **MP4** (editor-friendly; same container whether you Stop or the stream ends). |
+| **File format** | Finished recordings are always **MP4**. When YouTube offers it, the app grabs **H.264 + AAC** (plays in VLC / Kdenlive without transcoding). Otherwise it falls back to whatever YouTube served (often VP9 + AAC). |
 
 ---
 
 ## Patch notes
 
 Full history: [`CHANGELOG.md`](CHANGELOG.md).
+
+### 1.3.5
+
+- Recordings prefer **H.264 + AAC** from YouTube so VLC and Kdenlive can open the MP4 without transcoding (falls back to VP9 + AAC if H.264 is not offered).
+- Catch-up no longer jumps to **LIVE** while thousands of DVR fragments are still outstanding (this is what dropped video on This Little Piggy while audio kept going).
+- If video DASH hangs while audio is still downloading, the same file is restarted so the video URL can refresh instead of leaving holes in the picture.
 
 ### 1.3.4
 
