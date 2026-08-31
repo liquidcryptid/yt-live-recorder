@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.3.5 — 2026-08-30
+
+### Changes
+- **Prefer H.264 + AAC from YouTube** — recordings pick `avc1` + `mp4a` (1080p when YouTube has it: 137/299 + 140; 720p 136 if that is the best H.264; live-edge HLS 96) so VLC and Kdenlive can play the MP4 without transcoding. The old sort preferred VP9 then AV1 (`248+140` / `399+140`) remuxed into MP4, which editors reject and VLC plays poorly. If a live has no H.264, the job still falls back to VP9 + AAC.
+
+### Bug fixes
+- **Catch-up no longer flips to LIVE thousands of fragments behind** — if YouTube reports a fragment total, Catch-up stays until both tracks are within 3 of the DVR head. This Little Piggy (`@nobodylikesonions`) was labelled LIVE at `272/3714` because a slow DASH stall looked like live cadence (`0.50 frag/s`). The published file kept the full audio timeline with roughly half the video frames missing (~16 fps of a 30 fps VP9 stream).
+- **Video DASH hang while audio continues refreshes the download** — if video bytes freeze ~75s while audio still grows, yt-dlp is restarted on the **same file** so googlevideo URLs refresh. From-start also aborts on a missing fragment instead of skipping it (skip left hours of audio with holes in the video).
+
 ## 1.3.4 — 2026-08-26
 
 ### Bug fixes
