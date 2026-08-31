@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.6 — 2026-08-31
+
+### Changes
+- **From-start is left running** — one `yt-dlp --live-from-start` job. No `--abort-on-unavailable-fragment`, no watchdog that kills yt-dlp because video looks stalled. Catch-up vs LIVE is still a UI label (does not flip thousands of DVR fragments behind). Connection drop (yt-dlp actually exits while still live) still `--continue`s the same file. Format still prefers H.264 + AAC (`avc1`+`mp4a`, ≤1080) when YouTube lists it, then VP9 + AAC.
+- **Firefox cookies only after an early abort** — public lives start with no cookies (yt-dlp default clients). If yt-dlp exits before any video (members-only, age-restricted, no formats, 403), and the Firefox checkbox is on, that channel is retried **once** with cookies. The checkbox still copies Firefox cookies on Start Monitoring so that retry is ready.
+
 ## 1.3.5 — 2026-08-30
 
 ### Changes
