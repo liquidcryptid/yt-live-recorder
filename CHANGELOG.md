@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.3.8 — 2026-09-11
+
+### Changes
+- **Cleanup** — unused lib exports and leftover path helpers removed. Recording behaviour is the same as 1.3.7 (Store logs folder + disk-space dialogs).
+
+## 1.3.7 — 2026-09-11
+
+### Bug fixes
+- **Microsoft Store: Open logs folder works on a clean install** — Store AppX virtualizes `%APPDATA%` to `LocalCache`. Help → Open logs folder (and About) now open that Explorer-visible path instead of `C:\Users\…\AppData\Roaming\yt-live-recorder\logs`, which does not exist for Store-only users.
+- **Disk full / low space is no longer silent** — a dialog appears if the scratch drive or recordings folder is low (under 2 GiB) or full. Remux and copy check free space first. Failed saves still leave files in temp until the next launch.
+
 ## 1.3.6 — 2026-08-31
 
 ### Changes
