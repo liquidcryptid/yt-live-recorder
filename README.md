@@ -7,7 +7,7 @@ Desktop app that **watches YouTube channels** and **records livestreams** automa
 
 <!-- Public / end-user doc. Maintainer notes: docs/DEV.md (Forgejo). Version is also in package.json. -->
 
-**Current version: 1.3.6**
+**Current version: 1.3.8**
 
 **Privacy:** [Privacy Policy](https://github.com/liquidcryptid/yt-live-recorder/blob/main/docs/PRIVACY.md) · Support: liquidcryptid@gmail.com
 
@@ -66,9 +66,9 @@ AppImage supports **in-app updates** the same way as Windows.
 | **Remove** | Removes the channel from the list; if it was recording, the current segment is still saved |
 | **Closing the window (X)** | Saves active recordings first (please-wait popup), then exits |
 | **Check interval** | Fixed at **20 seconds** (not configurable) |
-| **Logs** | Help → **Open Logs Folder** — timestamps are local time; send this file if something fails |
+| **Logs** | Help → **Open Logs Folder** — timestamps are local time; send this file if something fails. Microsoft Store builds open the real Store data folder (Explorer can see it) |
 | **Where tools live** | Windows: `%APPDATA%\yt-live-recorder\bin` · Linux: `~/.local/share/yt-live-recorder/bin` |
-| **Temp / scratch** | Safe to delete when the app is **not** recording: `%LOCALAPPDATA%\yt-live-recorder\YTLiveRecorderTemp` or `~/.cache/yt-live-recorder/YTLiveRecorderTemp` (on disk, not `/tmp`). Closing the app can leave the last copied file there until the next launch (startup clears it). |
+| **Temp / scratch** | Safe to delete when the app is **not** recording. On a Microsoft Store install the folder is under `%LOCALAPPDATA%\Packages\…\LocalCache` (Help → About shows the path). GitHub/NSIS: `%LOCALAPPDATA%\yt-live-recorder\YTLiveRecorderTemp`. Linux: `~/.cache/yt-live-recorder/YTLiveRecorderTemp` (on disk, not `/tmp`). Closing the app can leave the last copied file there until the next launch (startup clears it). |
 | **From the start** | Lives record from the beginning of YouTube’s rewind window when available; the row shows **Catch-up** (title, size/speed) then **LIVE** once rewind has actually reached the live edge (not while thousands of fragments are still outstanding). If the live ends before rewind is done, the **same file** keeps grabbing remaining DVR (**ENDED — finishing catch-up**). If yt-dlp itself exits while they are **still live**, it is restarted on the same file. If nothing is written for a minute after the live ended, the file is force-saved and the channel goes back to live detection. A new live is a **new** from-start recording. After **Stop**, the next segment is **LIVE** only |
 | **Public lives** | Record without cookies (same as a CLI `--live-from-start`). The Firefox checkbox is not used unless yt-dlp aborts before any video |
 | **Members-only lives** | Check **Use cookies from Firefox**. Sign in to YouTube in Firefox; Firefox does not need to stay open. The app copies cookies on Start Monitoring and retries with them only if the no-cookie job cannot start. |
@@ -79,6 +79,15 @@ AppImage supports **in-app updates** the same way as Windows.
 ## Patch notes
 
 Full history: [`CHANGELOG.md`](CHANGELOG.md).
+
+### 1.3.8
+
+- Same as 1.3.7 for users (Store logs folder + disk-space dialogs). Internal unused exports cleaned up.
+
+### 1.3.7
+
+- Microsoft Store: **Open logs folder** opens the real Store data folder (Explorer can see it).
+- Dialog if the disk is **low** (under 2 GiB) or **full** so a failed save is not silent.
 
 ### 1.3.6
 
