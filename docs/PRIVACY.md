@@ -1,6 +1,6 @@
 # Privacy Policy — YTLiveRecorder
 
-**Last updated:** 2026-08-24  
+**Last updated:** 2026-09-03  
 **Publisher:** Liquid Cryptid  
 **Contact:** liquidcryptid@gmail.com  
 **Product:** YTLiveRecorder (including the Microsoft Store edition)
@@ -59,7 +59,7 @@ The app does not include third-party advertising SDKs or analytics SDKs for mark
 
 ## Optional browser cookies
 
-If you check **Use cookies from Firefox**, the app copies Firefox cookie data into a local Netscape file under app data (`cookies.from-browser.txt`) so recordings can use your logged-in YouTube session (for example members-only or age-restricted content). The copy is refreshed when you Start Monitoring. Unchecking the box deletes that file. You can instead place your own `cookies.txt` in the same folder.
+If you check **Use cookies from Firefox**, the app copies Firefox cookie data into a local Netscape file under app data (`cookies.from-browser.txt`) when you Start Monitoring. Live detection may use that copy. Public livestream recordings still start **without** cookies; the copy is used for a recording only if the first job cannot start (members-only, age-restricted, or similar). Unchecking the box deletes that file. You can instead place your own `cookies.txt` in the same folder.
 
 - Only enable this if you understand that stream access uses **your** Firefox YouTube session.  
 - You must be signed in to YouTube in Firefox; Firefox does not need to stay open.  
@@ -85,7 +85,7 @@ It does not require you to create a Liquid Cryptid account.
 - Delete recordings by removing files from your chosen folder.  
 - Clear temp data when the app is **not** recording (`%LOCALAPPDATA%\yt-live-recorder\YTLiveRecorderTemp`, or `~/.cache/yt-live-recorder/YTLiveRecorderTemp` on Linux).  
 - Browser cookie copies live in `%APPDATA%\yt-live-recorder\cookies.from-browser.txt`; uncheck **Use cookies from Firefox** or delete that folder to remove them.  
-- Uninstall the app via Windows / Microsoft Store; you may also delete `%APPDATA%\yt-live-recorder` (settings, logs, cookies, staged tools) and `%LOCALAPPDATA%\yt-live-recorder` (recording scratch). On Linux, also `~/.cache/yt-live-recorder`.
+- Uninstall the app via Windows / Microsoft Store; you may also delete `%APPDATA%\yt-live-recorder` (settings, logs, cookies, staged tools) and `%LOCALAPPDATA%\yt-live-recorder` (recording scratch). A Microsoft Store install keeps that data under `%LOCALAPPDATA%\Packages\LiquidCryptid.YTLiveRecorder_9p81w4ygya62w\` (removed on uninstall). On Linux, also `~/.cache/yt-live-recorder`.
 
 ## Third-party services
 
