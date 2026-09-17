@@ -15,48 +15,46 @@ Desktop app that **watches YouTube channels** and **records livestreams** automa
 
 ## Download
 
-Get the latest build from **[GitHub Releases](https://github.com/liquidcryptid/yt-live-recorder/releases/latest)**.
+| Your computer | Get it here |
+|---------------|-------------|
+| **Windows** | [Microsoft Store](https://apps.microsoft.com/detail/9MVWBRQ53RNF) |
+| **Linux** | `YTLiveRecorder-Linux.AppImage` from **[GitHub Releases](https://github.com/liquidcryptid/yt-live-recorder/releases/latest)** |
 
-| Your computer | Download this file |
-|---------------|--------------------|
-| **Windows** (most people) | `YTLiveRecorder-Windows-Setup.exe` |
-| **Linux** | `YTLiveRecorder-Linux.AppImage` |
+The GitHub Windows `.exe` installer (NSIS, `YTLiveRecorder-Windows-Setup.exe`) is **deprecated** and is no longer published. If you still have that install, switch to the Store build — it will not auto-update from GitHub.
 
-Other files on the release page (`latest.yml`, `*.blockmap`, checksums) are for **automatic updates** — you can ignore them for a first install.
+Other files on the GitHub release page (`latest-linux.yml`, checksums) are for **AppImage automatic updates** — you can ignore them for a first Linux install.
 
 ---
 
 ## Usage
 
-### Windows
+### Windows (Microsoft Store)
 
-1. Download **`YTLiveRecorder-Windows-Setup.exe`**.
-2. Run it. If **SmartScreen** appears: **More info** → **Run anyway** (the installer is not code-signed yet).
-3. Allow **administrator** access when prompted (installs under Program Files).
-4. Launch **YTLiveRecorder** from the Start Menu or desktop shortcut.
-5. In the app:
+1. Install **YTLiveRecorder** from the [Microsoft Store](https://apps.microsoft.com/detail/9MVWBRQ53RNF).
+2. Launch **YTLiveRecorder** from the Start Menu.
+3. In the app:
    1. **Browse** → choose a folder for finished recordings (local disk or network share).
    2. **Add channel** — type the channel handle (e.g. `liquid_cryptid`). The `@` is optional.
    3. Optionally check **Use cookies from Firefox** if you need membership/age-restricted streams. Public lives record without cookies; if yt-dlp cannot start a stream, that channel is retried with the copied Firefox cookies. Sign in to YouTube in Firefox first; Firefox does not need to stay open.
    4. Click **Start Monitoring**.
-6. When a channel goes live, recording starts automatically.
-7. While a channel is **Recording**, click **Stop** next to that channel to save the current segment and keep monitoring. If the stream is still live, recording resumes automatically after the file is saved.
-8. Click **Stop Monitoring** when you want to stop watching entirely. The app finalizes any active files and moves them into  
+4. When a channel goes live, recording starts automatically.
+5. While a channel is **Recording**, click **Stop** next to that channel to save the current segment and keep monitoring. If the stream is still live, recording resumes automatically after the file is saved.
+6. Click **Stop Monitoring** when you want to stop watching entirely. The app finalizes any active files and moves them into  
    `your-folder\ChannelName\…` as a normal `.mp4` (not a `.part` or `.mkv` file).
 
-**Updates:** a green **Update x.y.z** badge may appear next to the title, or use **Help → Check for Updates…**.
+**Updates:** Microsoft Store (Library, or Help → Check for Updates…). An old GitHub `.exe` install will not auto-update — install the Store build instead.
 
 ### Linux (AppImage)
 
-1. Download **`YTLiveRecorder-Linux.AppImage`**.
+1. Download **`YTLiveRecorder-Linux.AppImage`** from [GitHub Releases](https://github.com/liquidcryptid/yt-live-recorder/releases/latest).
 2. Make it executable and run:
    ```bash
    chmod +x YTLiveRecorder-Linux.AppImage
    ./YTLiveRecorder-Linux.AppImage
    ```
-3. Same in-app steps as Windows (folder → add channels → Start Monitoring).
+3. In the app: **Browse** folder → add channels → **Start Monitoring**. **Stop** / **Stop Monitoring** work the same as on Windows.
 
-AppImage supports **in-app updates** the same way as Windows.
+AppImage supports **in-app updates**: a green **Update x.y.z** badge may appear next to the title, or use **Help → Check for Updates…**.
 
 ### Tips
 
@@ -68,7 +66,7 @@ AppImage supports **in-app updates** the same way as Windows.
 | **Check interval** | Fixed at **20 seconds** (not configurable) |
 | **Logs** | Help → **Open Logs Folder** — timestamps are local time; send this file if something fails. Microsoft Store builds open the real Store data folder (Explorer can see it) |
 | **Where tools live** | Windows: `%APPDATA%\yt-live-recorder\bin` · Linux: `~/.local/share/yt-live-recorder/bin` |
-| **Temp / scratch** | Safe to delete when the app is **not** recording. On a Microsoft Store install the folder is under `%LOCALAPPDATA%\Packages\…\LocalCache` (Help → About shows the path). GitHub/NSIS: `%LOCALAPPDATA%\yt-live-recorder\YTLiveRecorderTemp`. Linux: `~/.cache/yt-live-recorder/YTLiveRecorderTemp` (on disk, not `/tmp`). Closing the app can leave the last copied file there until the next launch (startup clears it). |
+| **Temp / scratch** | Safe to delete when the app is **not** recording. Microsoft Store: under `%LOCALAPPDATA%\Packages\…\LocalCache` (Help → About shows the path). Linux: `~/.cache/yt-live-recorder/YTLiveRecorderTemp` (on disk, not `/tmp`). Closing the app can leave the last copied file there until the next launch (startup clears it). |
 | **From the start** | Lives record from the beginning of YouTube’s rewind window when available; the row shows **Catch-up** (title, size/speed) then **LIVE** once rewind has actually reached the live edge (not while thousands of fragments are still outstanding). If the live ends before rewind is done, the **same file** keeps grabbing remaining DVR (**ENDED — finishing catch-up**). If yt-dlp itself exits while they are **still live**, it is restarted on the same file. If nothing is written for a minute after the live ended, the file is force-saved and the channel goes back to live detection. A new live is a **new** from-start recording. After **Stop**, the next segment is **LIVE** only |
 | **Public lives** | Record without cookies (same as a CLI `--live-from-start`). The Firefox checkbox is not used unless yt-dlp aborts before any video |
 | **Members-only lives** | Check **Use cookies from Firefox**. Sign in to YouTube in Firefox; Firefox does not need to stay open. The app copies cookies on Start Monitoring and retries with them only if the no-cookie job cannot start. |
@@ -83,6 +81,7 @@ Full history: [`CHANGELOG.md`](CHANGELOG.md).
 ### 1.3.8
 
 - Same as 1.3.7 for users (Store logs folder + disk-space dialogs). Internal unused exports cleaned up.
+- **Windows NSIS installer is deprecated.** GitHub Releases ship the Linux AppImage. Windows is Microsoft Store.
 
 ### 1.3.7
 
@@ -192,7 +191,7 @@ Full history: [`CHANGELOG.md`](CHANGELOG.md).
 ### 1.2.0
 
 - **In-app updates** from GitHub Releases (Help → Check for Updates).
-- Windows NSIS + Linux AppImage support auto-install; `.deb` is manual.
+- Linux AppImage supports in-app updates from GitHub Releases; `.deb` is manual. (The Windows NSIS installer from this era is deprecated — use the Microsoft Store.)
 
 ### Earlier (1.1.x highlights)
 
