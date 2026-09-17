@@ -4,6 +4,7 @@
 
 ### Changes
 - **Cleanup** — unused lib exports and leftover path helpers removed. Recording behaviour is the same as 1.3.7 (Store logs folder + disk-space dialogs).
+- **Windows NSIS installer is deprecated** — the GitHub `.exe` (`YTLiveRecorder-Windows-Setup.exe`) is no longer built or published. GitHub Releases ship **Linux AppImage** only. Windows installs and updates come from the **Microsoft Store**. An old GitHub Windows install will not auto-update; switch to the Store build.
 
 ## 1.3.7 — 2026-09-11
 
